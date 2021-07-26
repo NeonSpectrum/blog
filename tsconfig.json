@@ -1,0 +1,27 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "es2015",
+        "moduleResolution": "node",
+        "strict": true,
+        "experimentalDecorators": true,
+        "allowSyntheticDefaultImports": true,
+        "emitDecoratorMetadata": true,
+        "noImplicitAny": false,
+        "strictFunctionTypes": false,
+        "importHelpers": true,
+        "esModuleInterop": true,
+        "baseUrl": ".",
+        "paths": {
+            "@/*": [
+                "./resources/js/src/*"
+            ]
+        }
+    },
+    "include": [
+        "./resources/js/**/*.ts", "./resources/js/**/*.vue"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}

@@ -1,0 +1,43 @@
+& {
+    background-image: url('../images/login-bg.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+&, .login-container {
+    height: 100vh;
+}
+
+.left-side, .right-side {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.left-side {
+    width: 60%;
+    float: left;
+    padding-left: 10%;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.right-side {
+    width: 40%;
+    float: right;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.right-side h1 {
+    margin-bottom: 50px;
+}
+
+.right-side .card {
+    padding: 20px;
+    width: 70%;
+}
+
+form button[type="submit"] {
+    width: 90px;
+}
