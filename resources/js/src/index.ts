@@ -9,6 +9,7 @@ import lodash from 'lodash';
 import axios from 'axios';
 import Vuex, { Store } from 'vuex';
 import storeOptions from '@/store';
+import Vuelidate from 'vuelidate';
 
 export default class Application {
     private router?: VueRouter;
@@ -20,6 +21,7 @@ export default class Application {
         Vue.use(VueMoment);
         Vue.use(VueCookies);
         Vue.use(Vuex);
+        Vue.use(Vuelidate);
 
         return this;
     }
@@ -31,7 +33,7 @@ export default class Application {
             mode: 'history'
         });
 
-        this.router.afterEach((to, from) => {
+        this.router.afterEach((to) => {
             document.body.id = to.name || '';
         });
 

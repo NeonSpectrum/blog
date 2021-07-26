@@ -2,7 +2,7 @@ import { Model } from '@vuex-orm/core';
 import { AttrField, OrmModel, PrimaryKey } from 'vuex-orm-decorators';
 import type { Config } from '@vuex-orm/plugin-axios';
 import Category from '@/models/category';
-import { Comment } from '@/types';
+import { Comment, User } from '@/types';
 
 @OrmModel('blog')
 export default class Blog extends Model {
@@ -12,6 +12,7 @@ export default class Blog extends Model {
     @AttrField() title!: string;
     @AttrField() content!: string;
     @AttrField() image!: string;
+    @AttrField() user!: User;
     @AttrField() comments!: Comment[];
     @AttrField() categories!: Category[];
     @AttrField() created_at!: string;

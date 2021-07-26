@@ -5,19 +5,18 @@
                 <div class="modal-content">
                     <form @submit.prevent="save">
                         <div class="modal-header">
-                            <h5 class="modal-title">{{ !user.id ? 'Add User' : 'Editing ' + user.username }}</h5>
+                            <h5 class="modal-title">{{ 'Editing ' + user.username }}</h5>
                             <button @click="shown = false" type="button" class="btn-close"></button>
                         </div>
                         <div class="modal-body">
                             <div class="form-floating mb-3">
-                                <input v-model="name" type="text" id="name" class="form-control" placeholder="...">
-                                <label for="name">Name</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input v-model="username" type="text" id="username" class="form-control"
+                                <input v-model="$v.name.$model" type="text" id="name" class="form-control"
                                        placeholder="..."
                                 >
-                                <label for="username">Username</label>
+                                <label for="name">Name</label>
+                                <div v-show="$v.name.$dirty && !$v.name.required" class="invalid-feedback">
+                                    Please choose a name.
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -35,20 +34,21 @@
 <script lang="ts">
 import Vue from '@/lib/vue';
 import { Component, Inject } from 'vue-property-decorator';
-import { User } from '@/types';
 import { Action } from 'vuex-class';
+import { User } from '@/types';
+import { required } from 'vuelidate/lib/validators';
+import { Validate } from 'vuelidate-property-decorators';
 
 @Component
 export default class UserManage extends Vue {
     @Action('setUser') setUser;
     @Inject() fetchData;
 
-    user?: User;
+    user?: User | any = {};
 
     shown: boolean = false;
 
-    name: string = '';
-    username: string = '';
+    @Validate({ required }) name: string = '';
 
     showModal(user, value: boolean) {
         this.user = user;
@@ -56,27 +56,21 @@ export default class UserManage extends Vue {
 
         if (this.user) {
             this.name = this.user.name;
-            this.username = this.user.username;
         }
     }
 
     getData() {
         return {
-            name: this.name,
-            username: this.username
+            name: this.name
         };
     }
 
-    add() {
-        return this.$http.post('/api/users', this.getData());
-    }
-
-    edit() {
-        return this.$http.put('/api/users/' + this.user?.id, this.getData());
-    }
-
     async save() {
-        let response = await (!this.user ? this.add() : this.edit());
+        this.$v?.$touch();
+
+        if (this.$v?.$invalid) return;
+
+        let response = await this.$http.put('/api/users/' + this.user?.id, this.getData());
 
         alert(response.data.message);
 

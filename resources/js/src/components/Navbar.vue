@@ -12,7 +12,7 @@
                         My Blog
                     </router-link>
                 </li>
-                <li class="nav-item">
+                <li v-if="$user.user_type === 'admin'" class="nav-item">
                     <router-link to="/admin" class="nav-link">
                         User Management
                     </router-link>

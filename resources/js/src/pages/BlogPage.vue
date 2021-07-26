@@ -9,6 +9,9 @@
             </div>
             <br>
             <span v-for="category in blog.categories" class="badge bg-secondary me-2">{{ category.name }}</span>
+            <div class="small-text mt-2" style="text-transform: none">
+                Posted by: {{ blog.user.username }} - {{ blog.created_at | moment('MMM DD, YYYY') }}
+            </div>
             <hr>
             <img :src="blog.image" alt="" style="max-width: 500px" class="d-block mx-auto">
             <hr class="mx-auto" style="width: 5%">

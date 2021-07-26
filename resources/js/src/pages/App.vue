@@ -40,9 +40,9 @@ export default class App extends Vue {
     @Watch('$route.name')
     async refreshData(value) {
         if (value === 'home' || value === 'me') {
-            this.loader(false);
-            await Blog.fetch();
             this.loader(true);
+            await Blog.fetch();
+            this.loader(false);
         }
     }
 

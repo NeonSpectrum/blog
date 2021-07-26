@@ -42,7 +42,6 @@ export default class Sidebar extends Vue {
 
     selectCategory(id: number) {
         if (this.selectedCategory.includes(id)) {
-            console.log(this.selectedCategory, this.selectedCategory.indexOf(id));
             this.$delete(this.selectedCategory, this.selectedCategory.indexOf(id));
         } else {
             this.selectedCategory.push(id);

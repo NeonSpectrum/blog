@@ -22,8 +22,7 @@ class BlogController extends Controller
      */
     public function index()
     {
-        return Blog::with(['comments', 'comments.user', 'categories'])
-                   ->where('user_id', auth()->user()->id)
+        return Blog::with(['user', 'comments', 'comments.user', 'categories'])
                    ->latest()
                    ->get();
     }
@@ -109,22 +108,18 @@ class BlogController extends Controller
      *
      * @param int $id
      *
-     * @return Response
+     * @return array
      */
-    public function destroy($id)
+    public function destroy(int $id) : array
     {
         $blog = Blog::find($id);
         $blog->delete();
-    }
 
-    /**
-     * Get all blog
-     *
-     * @return Blog[]|Collection
-     */
-    public function all()
-    {
-        return Blog::all();
+        if (!$blog->delete()) {
+            return ['success' => false, 'message' => __('api.delete_failed')];
+        }
+
+        return ['success' => true, 'message' => __('api.delete_success')];
     }
 
     /**
@@ -135,7 +130,7 @@ class BlogController extends Controller
      *
      * @return array
      */
-    public function comment(Request $request, int $id)
+    public function comment(Request $request, int $id) : array
     {
         $blog = Blog::find($id);
 

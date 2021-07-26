@@ -17,7 +17,7 @@ class AuthCheck
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!auth()->check()) {
+        if (!$request->is('api/user') && !auth()->check()) {
             return response()->json(['code' => 403], 403);
         }
 

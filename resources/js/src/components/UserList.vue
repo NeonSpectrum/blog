@@ -1,6 +1,6 @@
 <template>
     <div>
-        <table ref="table" style="width: 100%; margin-top: 20px !important">
+        <table ref="table" class="table table-striped" style="margin-top: 20px !important">
             <thead>
                 <tr>
                     <td>ID</td>
@@ -36,7 +36,7 @@ import Vue from '@/lib/vue';
 import { Component, Prop, Ref } from 'vue-property-decorator';
 import $ from 'jquery';
 import { User } from '@/types';
-import UserManage from '@/components/UserManage.vue';
+import UserManage from '@/components/UserAdd.vue';
 
 @Component({
     components: { UserManage }

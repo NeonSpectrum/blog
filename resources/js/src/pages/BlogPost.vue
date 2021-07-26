@@ -7,28 +7,46 @@
                     <form @submit.prevent="postBlog">
                         <div class="form-group">
                             <label for="title">Title</label>
-                            <input v-model="title" type="text" id="title" class="form-control">
+                            <input v-model="$v.title.$model" type="text" id="title" class="form-control">
+                            <div v-show="$v.title.$dirty && !$v.title.required"
+                                 class="invalid-feedback"
+                            >
+                                Please choose a title.
+                            </div>
                         </div>
                         <div class="form-group mt-2">
                             <label for="content">Content</label>
-                            <textarea v-model="content" id="content" class="form-control" rows="5"></textarea>
+                            <textarea v-model="$v.content.$model" id="content" class="form-control" rows="5"></textarea>
+                            <div v-show="$v.content.$dirty && !$v.content.required"
+                                 class="invalid-feedback"
+                            >
+                                Please choose a content.
+                            </div>
                         </div>
                         <div class="form-group mt-2">
                             <label class="mb-2">Category</label>
-
                             <div v-for="category in categoryList" class="form-check">
                                 <label class="form-check-label">
-                                    <input v-model="categories" type="checkbox"
+                                    <input v-model="$v.categories.$model" type="checkbox"
                                            :value="category.id"
                                     >
                                     {{ category.name }}
                                 </label>
                             </div>
-
+                            <div v-show="$v.categories.$dirty && !$v.categories.required"
+                                 class="invalid-feedback"
+                            >
+                                Please choose a category.
+                            </div>
                         </div>
                         <div class="form-group mt-2">
                             <label for="image" class="form-label">Blog Image</label>
-                            <input @change="uploadFile" class="form-control" type="file" id="image">
+                            <input @change="uploadFile" class="form-control" type="file" id="image" accept="image/*">
+                            <div v-show="$v.image.$dirty && !$v.image.required"
+                                 class="invalid-feedback"
+                            >
+                                Please choose an image.
+                            </div>
                         </div>
                         <img v-if="imageSrc" :src="imageSrc" alt="" width="300">
                         <br>
@@ -54,17 +72,19 @@ import { Component } from 'vue-property-decorator';
 import Navbar from '@/components/Navbar.vue';
 import Blog from '@/models/blog';
 import Category from '@/models/category';
+import { Validate } from 'vuelidate-property-decorators';
+import { required } from 'vuelidate/lib/validators';
 
 @Component({
     components: { Navbar }
 })
 export default class BlogPost extends Vue {
     id!: number;
-    title: string = '';
-    content: string = '';
-    image: File | string | null = null;
+    @Validate({ required }) title: string = '';
+    @Validate({ required }) content: string = '';
+    @Validate({ required }) image: File | string | null = null;
+    @Validate({ required }) categories: number[] = [];
     imageSrc: string = '';
-    categories: number[] = [];
 
     async created() {
         this.id = +this.$route.params.id;
@@ -88,6 +108,10 @@ export default class BlogPost extends Vue {
     }
 
     async postBlog() {
+        this.$v.$touch();
+
+        if (this.$v.$invalid) return;
+
         let response = !this.id ? await this.$http.post('/api/blogs', {
             title: this.title,
             content: this.content,

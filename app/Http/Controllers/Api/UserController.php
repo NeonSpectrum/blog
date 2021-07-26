@@ -12,7 +12,7 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Collection|User[]
+     * @return User[]|Collection
      */
     public function index()
     {
@@ -23,7 +23,6 @@ class UserController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @param string  $userType
      *
      * @return array
      */

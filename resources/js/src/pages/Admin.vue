@@ -2,8 +2,7 @@
     <div>
         <navbar></navbar>
         <div class="container mt-5">
-            <h1 class="d-inline">User Management</h1>
-            <button @click="addUser" class="btn btn-primary float-end">Add</button>
+            <button @click="addUser" class="btn btn-primary d-block ms-auto">Add</button>
             <div class="card shadow mt-3">
                 <div class="card-body">
                     <user-list ref="userList" v-if="isLoaded" :data="users"></user-list>
