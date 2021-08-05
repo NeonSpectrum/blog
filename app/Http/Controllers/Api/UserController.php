@@ -28,6 +28,10 @@ class UserController extends Controller
      */
     public function store(Request $request) : array
     {
+        if ($this->checkIfUserExists($request->get('username'))) {
+            return ['success' => false, 'message' => __('api.user.already_exists')];
+        }
+
         $user = new User;
         $user->fill($request->only(['name', 'username', 'password']));
 
@@ -67,7 +71,7 @@ class UserController extends Controller
     public function update(Request $request, $id) : array
     {
         $user = User::find($id);
-        $user->fill($request->only(['name', 'username', 'password']));
+        $user->fill($request->only(['name', 'username', 'password', 'userType']));
 
         if (!$user->save()) {
             return ['success' => false, 'message' => __('api.save_failed')];
@@ -81,11 +85,28 @@ class UserController extends Controller
      *
      * @param int $id
      *
-     * @return void
+     * @return array
      */
-    public function destroy($id)
+    public function destroy(int $id) : array
     {
         $user = User::find($id);
-        $user->delete();
+
+        if (!$user->delete()) {
+            return ['success' => false, 'message' => __('api.delete_failed')];
+        }
+
+        return ['success' => true, 'message' => __('api.delete_success')];
+    }
+
+    /**
+     * Check if username exists on database
+     *
+     * @param string $username
+     *
+     * @return bool
+     */
+    private function checkIfUserExists(string $username) : bool
+    {
+       return User::where('username', $username)->exists();
     }
 }

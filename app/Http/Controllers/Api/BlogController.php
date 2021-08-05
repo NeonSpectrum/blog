@@ -68,9 +68,8 @@ class BlogController extends Controller
             'comments.user',
             'categories'
         ])->where([
-            'id'      => $id,
-            'user_id' => auth()->user()->id
-        ])->firstOrFail();
+            'id'      => $id
+        ])->first();
     }
 
     /**

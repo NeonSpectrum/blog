@@ -6,18 +6,20 @@
                     <td>ID</td>
                     <td>Username</td>
                     <td>Name</td>
+                    <td>User Type</td>
                     <td>Registration Date</td>
                     <td style="width: 10%">Action</td>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="user in data">
-                    <td>{{ user.id }}</td>
+                <tr v-for="(user, key) in data">
+                    <td>{{ key + 1 }}</td>
                     <td>{{ user.username }}</td>
                     <td>{{ user.name }}</td>
+                    <td>{{ lodash.upperFirst(user.user_type) }}</td>
                     <td>{{ user.created_at | moment('MMMM DD, YYYY hh:mm:ss A') }}</td>
                     <td>
-                        <button @click="showModal(user)" class="btn btn-primary btn-sm">Edit</button>
+                        <button @click="showEditModal(user)" class="btn btn-primary btn-sm">Edit</button>
                         <button v-if="user.user_type !== 'admin'" @click="deleteUser(user.id)"
                                 class="btn btn-primary btn-sm"
                         >
@@ -27,24 +29,28 @@
                 </tr>
             </tbody>
         </table>
-        <user-manage ref="userManage"></user-manage>
+        <user-add ref="userAdd"></user-add>
+        <user-edit ref="userEdit"></user-edit>
     </div>
 </template>
 
 <script lang="ts">
 import Vue from '@/lib/vue';
-import { Component, Prop, Ref } from 'vue-property-decorator';
+import { Component, Inject, Prop, Ref } from 'vue-property-decorator';
 import $ from 'jquery';
 import { User } from '@/types';
-import UserManage from '@/components/UserAdd.vue';
+import UserAdd from '@/components/UserAdd.vue';
+import UserEdit from '@/components/UserEdit.vue';
 
 @Component({
-    components: { UserManage }
+    components: { UserEdit, UserAdd  }
 })
 export default class UserList extends Vue {
+    @Inject() fetchData;
     @Prop() data;
     @Ref() table;
-    @Ref() userManage;
+    @Ref() userAdd;
+    @Ref() userEdit;
 
     currentUser = {};
 
@@ -52,16 +58,20 @@ export default class UserList extends Vue {
         $(this.table).DataTable({ autoWidth: false });
     }
 
-    showModal(user: User) {
-        this.userManage.showModal(user, true);
+    showAddModal() {
+        this.userAdd.showModal(true);
+    }
+
+    showEditModal(user: User) {
+        this.userEdit.showModal(user, true);
     }
 
     async deleteUser(id: number) {
         if (!confirm('Delete this user?')) return;
 
-        await this.$http.delete('/api/users/' + id);
+        let response = await this.$http.delete('/api/users/' + id);
 
-        alert('Deleted Successfully!');
+        alert(response.data.message);
     }
 }
 </script>

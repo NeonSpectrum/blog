@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow fixed-top">
         <div class="container">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">

@@ -11,6 +11,7 @@ axios.interceptors.request.use(function(config) {
 });
 axios.interceptors.response.use(undefined, function(error) {
     if (error.response.status === 403) return window.location.href = '/login';
+    if (error.message) alert(error.message);
     return error;
 });
 

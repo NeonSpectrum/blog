@@ -1,14 +1,11 @@
 <template>
-    <div>
-        <navbar></navbar>
-        <div class="container">
-            <div class="row mt-5">
-                <div class="col-md-3">
-                    <sidebar @search="searchBlog"></sidebar>
-                </div>
-                <div class="col-md-9">
-                    <blog-list :data="blogs"></blog-list>
-                </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <sidebar @search="searchBlog"></sidebar>
+            </div>
+            <div class="col-md-9">
+                <blog-list :data="blogs"></blog-list>
             </div>
         </div>
     </div>
@@ -28,14 +25,14 @@ import Blog from '@/models/blog';
 })
 export default class Home extends Vue {
     search = {
-        username: '',
+        title: '',
         category: []
     };
 
     get blogs() {
         let blog = Blog.query();
 
-        if (this.search.username) blog.where(blog => blog.title.includes(this.search.username));
+        if (this.search.title) blog.where(blog => blog.title.toLowerCase().includes(this.search.title.toLowerCase()));
         if (this.search.category.length > 0) blog.where(blog => {
             for (let category of this.search.category) {
                 if (!blog.categories.map(category => category.id).includes(category)) {

@@ -18,6 +18,13 @@
                                     Please choose a name.
                                 </div>
                             </div>
+                            <div class="form-floating mb-3">
+                                <select v-model="$v.userType.$model" type="text" id="userType" class="form-control">
+                                    <option value="user">User</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                                <label for="userType">User Type</label>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button @click="shown = false" type="button" class="btn btn-secondary">Close</button>
@@ -49,6 +56,7 @@ export default class UserManage extends Vue {
     shown: boolean = false;
 
     @Validate({ required }) name: string = '';
+    @Validate({ required }) userType: string = '';
 
     showModal(user, value: boolean) {
         this.user = user;
@@ -56,13 +64,8 @@ export default class UserManage extends Vue {
 
         if (this.user) {
             this.name = this.user.name;
+            this.userType = this.user.user_type;
         }
-    }
-
-    getData() {
-        return {
-            name: this.name
-        };
     }
 
     async save() {
@@ -70,12 +73,19 @@ export default class UserManage extends Vue {
 
         if (this.$v?.$invalid) return;
 
-        let response = await this.$http.put('/api/users/' + this.user?.id, this.getData());
+        let data = {
+            name: this.name,
+            userType: this.userType
+        };
+
+        let response = await this.$http.put('/api/users/' + this.user?.id, data);
 
         alert(response.data.message);
 
+        if (response.data.success === false) return;
+
         if (this.user?.id === this.$user.id) {
-            this.setUser(this.getData());
+            this.setUser(data);
         }
 
         this.shown = false;

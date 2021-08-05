@@ -1,9 +1,6 @@
 <template>
-    <div>
-        <navbar></navbar>
-        <div class="container mt-5">
-            <blog-list :data="blogs"></blog-list>
-        </div>
+    <div class="container">
+        <blog-list :data="blogs"></blog-list>
     </div>
 </template>
 

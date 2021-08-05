@@ -1,12 +1,9 @@
 <template>
-    <div>
-        <navbar></navbar>
-        <div class="container mt-5">
-            <button @click="addUser" class="btn btn-primary d-block ms-auto">Add</button>
-            <div class="card shadow mt-3">
-                <div class="card-body">
-                    <user-list ref="userList" v-if="isLoaded" :data="users"></user-list>
-                </div>
+    <div class="container">
+        <button @click="addUser" class="btn btn-primary d-block ms-auto">Add</button>
+        <div class="card shadow mt-3">
+            <div class="card-body">
+                <user-list ref="userList" v-if="isLoaded" :data="users"></user-list>
             </div>
         </div>
     </div>
@@ -49,7 +46,7 @@ export default class Admin extends Vue {
     }
 
     addUser() {
-        this.userList.showModal({});
+        this.userList.showAddModal();
     }
 }
 </script>

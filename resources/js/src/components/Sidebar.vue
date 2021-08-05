@@ -1,6 +1,6 @@
 <template>
     <div>
-        <input @keyup="$emit('search', 'username', $event.target.value)" type="text" class="form-control"
+        <input @keyup="$emit('search', 'title', $event.target.value)" type="text" class="form-control"
                placeholder="Search..."
         >
         <div style="margin-top: 50px">
@@ -55,7 +55,9 @@ export default class Sidebar extends Vue {
     }
 
     get mostComments() {
-        return this.lodash.sortBy(Blog.all(), blog => blog.comments.length).reverse();
+        return this.lodash.sortBy(Blog.all(), blog => blog.comments.length)
+                   .reverse()
+                   .filter(blog => blog.comments.length > 0);
     }
 }
 </script>

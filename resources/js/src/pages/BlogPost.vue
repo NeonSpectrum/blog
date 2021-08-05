@@ -1,8 +1,7 @@
 <template>
     <div>
-        <navbar></navbar>
         <div class="container">
-            <div class="card mt-5">
+            <div class="card">
                 <div class="card-body">
                     <form @submit.prevent="postBlog">
                         <div class="form-group">
@@ -72,19 +71,29 @@ import { Component } from 'vue-property-decorator';
 import Navbar from '@/components/Navbar.vue';
 import Blog from '@/models/blog';
 import Category from '@/models/category';
-import { Validate } from 'vuelidate-property-decorators';
-import { required } from 'vuelidate/lib/validators';
+import { Validate, Validations } from 'vuelidate-property-decorators';
+import { required, requiredIf } from 'vuelidate/lib/validators';
 
 @Component({
     components: { Navbar }
 })
 export default class BlogPost extends Vue {
     id!: number;
-    @Validate({ required }) title: string = '';
-    @Validate({ required }) content: string = '';
-    @Validate({ required }) image: File | string | null = null;
-    @Validate({ required }) categories: number[] = [];
     imageSrc: string = '';
+    title: string = '';
+    content: string = '';
+    image: File | string | null = null;
+    categories: number[] = [];
+
+    @Validations()
+    validations() {
+        return {
+            title: { required },
+            content: { required },
+            image: { required: requiredIf(() => !this.id) },
+            categories: { required }
+        };
+    }
 
     async created() {
         this.id = +this.$route.params.id;
@@ -121,7 +130,7 @@ export default class BlogPost extends Vue {
             title: this.title,
             content: this.content,
             categories: this.categories,
-            image: this.image
+            image: this.image || undefined
         });
 
         alert(response.data.message);

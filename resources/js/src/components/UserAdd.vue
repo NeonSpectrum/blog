@@ -5,7 +5,7 @@
                 <div class="modal-content">
                     <form @submit.prevent="save">
                         <div class="modal-header">
-                            <h5 class="modal-title">{{ !user.id ? 'Add User' : 'Editing ' + user.username }}</h5>
+                            <h5 class="modal-title">Add User</h5>
                             <button @click="shown = false" type="button" class="btn-close"></button>
                         </div>
                         <div class="modal-body">
@@ -26,6 +26,13 @@
                                 <div v-show="$v.username.$dirty && !$v.username.required" class="invalid-feedback">
                                     Please choose a name.
                                 </div>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <select v-model="$v.userType.$model" type="text" id="userType" class="form-control">
+                                    <option value="user">User</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                                <label for="userType">User Type</label>
                             </div>
                             <div class="form-floating mb-3">
                                 <input v-model="$v.password.$model" type="password" id="password" class="form-control"
@@ -74,13 +81,12 @@ export default class UserManage extends Vue {
     @Action('setUser') setUser;
     @Inject() fetchData;
 
-    user?: User | any = {};
-
     shown: boolean = false;
 
     name: string = '';
     username: string = '';
     password: string = '';
+    userType: string = 'user';
     confirmPassword: string = '';
 
     @Validations()
@@ -89,17 +95,13 @@ export default class UserManage extends Vue {
             name: { required },
             username: { required },
             password: { required },
+            userType: { required },
             confirmPassword: { required, invalid: value => value === this.password }
         };
     }
 
-    showModal(user, value: boolean) {
-        this.user = user;
+    showModal(value: boolean) {
         this.shown = value;
-
-        if (this.user) {
-            this.name = this.user.name;
-        }
     }
 
     async save() {
@@ -110,10 +112,13 @@ export default class UserManage extends Vue {
         let response = await this.$http.post('/api/users', {
             name: this.name,
             username: this.username,
-            password: this.password
+            password: this.password,
+            userType: this.userType
         });
 
         alert(response.data.message);
+
+        if (response.data.success === false) return;
 
         this.shown = false;
         await this.fetchData();
